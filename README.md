@@ -8,3 +8,10 @@ This project uses the `AsciiPanel` library for user input in a text-based interf
  - These objects are sent to the `Serializer` and are serialized using the JDOM library.
  - The resulting JDOM document are sent as a byte stream over the network using sockets, to be received by the `Deserializer`.
  - The `Deserializer` deserialized objects are then passed to an `Object Inspector` to view the contents.
+
+### Object Types
+ - `Primitive`: Contains fields for each of Java's primitive types
+ - `Reference`: Contains references to up to 3 other objects that have already been created by the user
+ - `Primitive Array`: Contains an array of arbitrary length of primitives
+ - `Reference Array`: Contains an array of arbitrary length of other objects that have been created by the user
+ - `ArrayList`: Contains a `java.util.ArrayList` that refers to other objects created by the user

@@ -2,7 +2,7 @@ package object_creator;
 
 import application.Screen;
 import asciiPanel.AsciiPanel;
-import object_creator.handlers.PrimitiveHandler;
+import object_creator.handlers.*;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
@@ -15,7 +15,8 @@ public class CreateObject extends Screen {
     }
 
     private static String[] ObjectTypes = new String[] {
-        "Primitive"
+        "Primitive",
+        "Reference"
     };
 
     @Override
@@ -47,6 +48,7 @@ public class CreateObject extends Screen {
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             switch(selection) {
                 case 0: return new PrimitiveHandler(objectCreator);
+                case 1: return new ReferenceHandler(objectCreator);
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return objectCreator;

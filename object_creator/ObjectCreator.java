@@ -10,6 +10,8 @@ import java.util.ArrayList;
 public class ObjectCreator extends Screen {
     private int selection;
     private ArrayList<ObjectType> objects;
+    public ArrayList<ObjectType> getObjects() { return objects; }
+    public void addObject(ObjectType newObject) { objects.add(newObject); }
 
     public ObjectCreator() {
         objects = new ArrayList<ObjectType>();
@@ -37,7 +39,7 @@ public class ObjectCreator extends Screen {
                 y++;
 
                 if (i == selection) {
-                    o.displayObject(terminal, 50, 8);
+                    o.displayObject(terminal, 40, 8);
                 }
             }
         }
@@ -73,9 +75,4 @@ public class ObjectCreator extends Screen {
         }
         return this;
     }
-
-    public void addObject(ObjectType newObject) {
-        objects.add(newObject);
-    }
-    
 }

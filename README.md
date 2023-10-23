@@ -1,6 +1,8 @@
 # Object Inspector
 A simple serializer and deserializer for CPSC 501. See the [assignment specifications](Assignment3.pdf) for more details.
 
+This project uses the `AsciiPanel` library for user input in a text-based interface. This library can be found here: [AsciiPanel](https://github.com/trystan/AsciiPanel).
+
 ### Process
  - `Object Creator` to create arbitrary objects through text-based user input.
  - These objects are sent to the `Serializer` and are serialized using the JDOM library.

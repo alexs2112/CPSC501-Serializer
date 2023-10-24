@@ -1,4 +1,4 @@
-# Object Inspector
+# Serializer
 A simple serializer and deserializer for CPSC 501. See the [assignment specifications](Assignment3.pdf) for more details.
 
 This project uses the `AsciiPanel` library for user input in a text-based interface. This library can be found here: [AsciiPanel](https://github.com/trystan/AsciiPanel).

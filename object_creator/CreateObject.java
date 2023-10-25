@@ -18,6 +18,7 @@ public class CreateObject extends Screen {
         "Primitive",
         "Reference",
         "Primitive Array",
+        "Reference Array",
     };
 
     @Override
@@ -51,6 +52,7 @@ public class CreateObject extends Screen {
                 case 0: return new PrimitiveHandler(objectCreator);
                 case 1: return new ReferenceHandler(objectCreator);
                 case 2: return new PrimitiveArrayHandler(objectCreator);
+                case 3: return new ReferenceArrayHandler(objectCreator);
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
             return objectCreator;

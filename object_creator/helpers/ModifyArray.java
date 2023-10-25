@@ -4,13 +4,17 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import application.Screen;
 import asciiPanel.AsciiPanel;
+import object_creator.classes.ObjectType;
 import object_creator.handlers.PrimitiveArrayHandler;
+import object_creator.handlers.ReferenceArrayHandler;
 
 public class ModifyArray extends Screen {
-    private PrimitiveArrayHandler handler;   
+    private PrimitiveArrayHandler handler;
+    private ReferenceArrayHandler refHandler;
     private int[] ints;
     private double[] doubles;
     private boolean[] bools;
+    private ObjectType[] objects;
     private int selection;
     private boolean editMode;
     private String editString = "";
@@ -19,6 +23,7 @@ public class ModifyArray extends Screen {
     public ModifyArray(PrimitiveArrayHandler handler, int[] ints) { this.handler = handler; this.ints = ints; }
     public ModifyArray(PrimitiveArrayHandler handler, double[] doubles) { this.handler = handler; this.doubles = doubles; }
     public ModifyArray(PrimitiveArrayHandler handler, boolean[] bools) { this.handler = handler; this.bools = bools; }
+    public ModifyArray(ReferenceArrayHandler refHandler, ObjectType[] objects) { this.refHandler = refHandler; this.objects = objects; }
 
     @Override
     public String title() { return "Edit Array"; }
@@ -30,6 +35,7 @@ public class ModifyArray extends Screen {
         if (ints != null) { printLength(terminal, ints.length); printInts(terminal); }
         else if (doubles != null) { printLength(terminal, doubles.length); printDoubles(terminal); }
         else if (bools != null) { printLength(terminal, bools.length); printBools(terminal); }
+        else if (objects != null) { printLength(terminal, objects.length); printObjects(terminal); }
 
         if (errorString.length() > 0)
             terminal.write("Error: " + errorString, 8, terminal.getHeightInCharacters() - 3, Color.RED);
@@ -41,6 +47,7 @@ public class ModifyArray extends Screen {
         if (ints != null) { length = ints.length; }
         else if (doubles != null) { length = doubles.length; }
         else if (bools != null) { length = bools.length; }
+        else if (objects != null) { length = objects.length; }
         else { return handler; }
 
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -58,8 +65,12 @@ public class ModifyArray extends Screen {
                 if (ints != null) { handler.saveNewArray(ints); }
                 else if (doubles != null) { handler.saveNewArray(doubles); }
                 else if (bools != null) { handler.saveNewArray(bools); }
-                return handler;
+                else if (objects != null) { refHandler.saveNewArray(objects); }
+                return getReturnScreen();
             } else if (!editMode) {
+                if (objects != null && selection > 0) {
+                    return new ObjectSelectorArray(this, objects, refHandler.getObjects(), selection - 1);
+                }
                 editMode = true;
             } else {
                 boolean pass = saveEdit();
@@ -75,7 +86,7 @@ public class ModifyArray extends Screen {
                 editString = "";
                 errorString = "";
             } else {
-                return handler;
+                return getReturnScreen();
             }
         } else if (editMode) {
             try {
@@ -90,6 +101,11 @@ public class ModifyArray extends Screen {
             } catch (java.lang.IllegalArgumentException e) { /* Ignore invalid characters */ }
         }
         return this;
+    }
+
+    private Screen getReturnScreen() {
+        if (handler != null) { return handler; }
+        else { return refHandler; }
     }
 
     private void printLength(AsciiPanel terminal, int len) {
@@ -179,6 +195,30 @@ public class ModifyArray extends Screen {
         terminal.write("Save Array", x - 4, ++y, c);
     }
 
+    private void printObjects(AsciiPanel terminal) {
+        int x = 4;
+        int y = 3;
+        terminal.write("Object[] objects", x, y);
+        y += 3;
+        x += 4;
+
+        Color c;
+        String s;
+        for (int i = 0; i < objects.length; i++) {
+            c = (selection == i + 1) ? Color.GREEN : Color.WHITE;
+            s = "[" + Integer.toString(i) + "] ";
+            if (objects[i] != null) {
+                s += objects[i].name + "  (" + objects[i].getTypeString() + ")";
+            } else {
+                s += "null";
+            }
+            terminal.write(s, x, y++, c);
+        }
+
+        c = (selection == objects.length + 1) ? Color.GREEN : Color.WHITE;
+        terminal.write("Save Array", x - 4, ++y, c);
+    }
+
     private boolean saveEdit() {
         if (selection == 0) {
             try {
@@ -230,6 +270,13 @@ public class ModifyArray extends Screen {
                 newBools[i] = bools[i];
             }
             bools = newBools;
+        } else if (objects != null) { 
+            ObjectType[] newObjects = new ObjectType[newLen];
+            for (int i = 0; i < objects.length; i++) {
+                if (i >= newLen) { break; }
+                newObjects[i] = objects[i];
+            }
+            objects = newObjects;
         }
 
     }

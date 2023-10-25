@@ -9,14 +9,19 @@ import object_creator.classes.ObjectType;
 import object_creator.handlers.ReferenceHandler;
 
 public class ObjectSelector extends Screen {
-    private int selection;
-    private ReferenceHandler referenceHandler;
-    private Screen prevScreen;
-    private ArrayList<ObjectType> objects;
+    protected int selection;
+    protected ReferenceHandler referenceHandler;
+    protected Screen prevScreen;
+    protected ArrayList<ObjectType> objects;
 
     public ObjectSelector(ReferenceHandler referenceHandler, ArrayList<ObjectType> objects) {
         this.referenceHandler = referenceHandler;
         this.prevScreen = referenceHandler;
+        this.objects = objects;
+    }
+    public ObjectSelector(ReferenceHandler referenceHandler, Screen screen, ArrayList<ObjectType> objects) {
+        this.referenceHandler = referenceHandler;
+        this.prevScreen = screen;
         this.objects = objects;
     }
 
@@ -59,9 +64,12 @@ public class ObjectSelector extends Screen {
             if (selection < 0) { selection = len - 1; }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             if (referenceHandler != null) {
-                referenceHandler.addReference(objects.get(selection));
+                if (objects != null && objects.size() > 0)
+                    referenceHandler.addReference(objects.get(selection));
                 return prevScreen;
             }
+        } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            return prevScreen;
         }
         return this;
     }

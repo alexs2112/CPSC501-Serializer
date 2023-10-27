@@ -4,6 +4,7 @@ import asciiPanel.AsciiPanel;
 import object_creator.classes.*;
 
 public class ObjectHelper {
+    @SuppressWarnings("rawtypes")
     public static String getTypeString(ObjectType o) {
         Class c = o.getClass();
         if (c == PrimitiveObject.class) {
@@ -20,6 +21,7 @@ public class ObjectHelper {
         return "";
     }
 
+    @SuppressWarnings("rawtypes")
     public static String[] getFields(ObjectType o) {
         Class c = o.getClass();
         if (c == PrimitiveObject.class) {
@@ -36,6 +38,7 @@ public class ObjectHelper {
         return new String[0];
     }
 
+    @SuppressWarnings("rawtypes")
     public static void displayObject(ObjectType o, AsciiPanel terminal, int x, int y) {
         Class c = o.getClass();
         if (c == PrimitiveObject.class) {

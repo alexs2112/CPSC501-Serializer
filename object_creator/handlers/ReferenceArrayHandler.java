@@ -8,7 +8,7 @@ import java.awt.Color;
 import object_creator.ObjectCreator;
 import object_creator.classes.ObjectType;
 import object_creator.classes.ReferenceArray;
-import object_creator.helpers.ModifyArray;
+import object_creator.helpers.ModifyObjectArray;
 import object_creator.helpers.ObjectHelper;
 
 public class ReferenceArrayHandler extends Screen {
@@ -82,7 +82,7 @@ public class ReferenceArrayHandler extends Screen {
                 ObjectType[] arr;
                 if (objs.objects == null) { arr = new ObjectType[0]; }
                 else { arr = objs.objects; }
-                return new ModifyArray(this, arr);
+                return new ModifyObjectArray(this, arr);
             }
         } else if (editMode) {
             try {

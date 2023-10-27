@@ -6,7 +6,9 @@ import application.Screen;
 import asciiPanel.AsciiPanel;
 import object_creator.ObjectCreator;
 import object_creator.classes.PrimitiveArray;
-import object_creator.helpers.ModifyArray;
+import object_creator.helpers.ModifyIntArray;
+import object_creator.helpers.ModifyDoubleArray;
+import object_creator.helpers.ModifyBoolArray;
 import object_creator.helpers.ObjectHelper;
 
 public class PrimitiveArrayHandler extends Screen {
@@ -84,13 +86,13 @@ public class PrimitiveArrayHandler extends Screen {
                 }
             } else if (selection == 1) {
                 if (obj.ints == null) { obj.ints = new int[0]; }
-                return new ModifyArray(this, obj.ints);
+                return new ModifyIntArray(this, obj.ints);
             } else if (selection == 2) {
                 if (obj.doubles == null) { obj.doubles = new double[0]; }
-                return new ModifyArray(this, obj.doubles);
+                return new ModifyDoubleArray(this, obj.doubles);
             } else if (selection == 3) {
                 if (obj.bools == null) { obj.bools = new boolean[0]; }
-                return new ModifyArray(this, obj.bools);
+                return new ModifyBoolArray(this, obj.bools);
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (editMode) {

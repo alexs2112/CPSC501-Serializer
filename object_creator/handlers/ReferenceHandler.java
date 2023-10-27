@@ -16,6 +16,7 @@ public class ReferenceHandler extends Screen {
     private int selection;
     private boolean editMode; // Editing the name field of the reference object
     private String editString = "";
+    private int returnIndex = -1;
 
     @Override
     public String title() { return "Creating Reference Object"; }
@@ -23,6 +24,12 @@ public class ReferenceHandler extends Screen {
     public ReferenceHandler(ObjectCreator objectCreator) {
         this.objectCreator = objectCreator;
         obj = new ReferenceObject();
+    }
+
+    public ReferenceHandler(ObjectCreator objectCreator, ReferenceObject obj, int index) {
+        this.objectCreator = objectCreator;
+        this.obj = obj;
+        this.returnIndex = index;
     }
 
     @Override
@@ -81,7 +88,12 @@ public class ReferenceHandler extends Screen {
                 }
             } else if (selection == 4) {
                 /* Save the object */
-                objectCreator.addObject(obj);
+                if (returnIndex > -1) {
+                    objectCreator.remObject(returnIndex);
+                    objectCreator.addObject(returnIndex, obj);
+                } else {
+                    objectCreator.addObject(obj);
+                }
                 return objectCreator;
             } else {
                 /* Handle object selection */

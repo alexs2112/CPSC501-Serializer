@@ -17,10 +17,17 @@ public class PrimitiveArrayHandler extends Screen {
     private int selection = 0;
     private boolean editMode; // If the user is editing the name or not
     private String editString = "";
+    private int returnIndex = -1;
 
     public PrimitiveArrayHandler(ObjectCreator objectCreator) {
         this.objectCreator = objectCreator;
         obj = new PrimitiveArray();
+    }
+
+    public PrimitiveArrayHandler(ObjectCreator objectCreator, PrimitiveArray obj, int index) {
+        this.objectCreator = objectCreator;
+        this.obj = obj;
+        this.returnIndex = index;
     }
 
     @Override
@@ -74,7 +81,12 @@ public class PrimitiveArrayHandler extends Screen {
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             if (selection == ObjectHelper.getFields(obj).length - 1 + 1) {
-                objectCreator.addObject(obj);
+                if (returnIndex > -1) {
+                    objectCreator.remObject(returnIndex);
+                    objectCreator.addObject(returnIndex, obj);
+                } else {
+                    objectCreator.addObject(obj);
+                }
                 return objectCreator;
             } else if (selection == 0) {
                 if (!editMode)

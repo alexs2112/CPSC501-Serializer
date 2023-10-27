@@ -15,15 +15,17 @@ public class PrimitiveHandler extends Screen {
     private boolean editMode; // If the user is editing a field or not
     private String editString = "";
     private String errorString = "";
+    private int returnIndex = -1;
 
     public PrimitiveHandler(ObjectCreator objectCreator) {
         this.objectCreator = objectCreator;
         obj = new PrimitiveObject();
     }
 
-    public PrimitiveHandler(ObjectCreator objectCreator, PrimitiveObject obj) {
+    public PrimitiveHandler(ObjectCreator objectCreator, PrimitiveObject obj, int index) {
         this.objectCreator = objectCreator;
         this.obj = obj;
+        this.returnIndex = index;
     }
 
     @Override
@@ -73,7 +75,12 @@ public class PrimitiveHandler extends Screen {
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             if (selection == ObjectHelper.getFields(obj).length - 1 + 1) {
-                objectCreator.addObject(obj);
+                if (returnIndex > -1) {
+                    objectCreator.remObject(returnIndex);
+                    objectCreator.addObject(returnIndex, obj);
+                } else {
+                    objectCreator.addObject(obj);
+                }
                 return objectCreator;
             } else if (!editMode) {
                 editMode = true;

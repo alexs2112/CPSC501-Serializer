@@ -2,7 +2,8 @@ package object_creator;
 
 import application.Screen;
 import asciiPanel.AsciiPanel;
-import object_creator.classes.ObjectType;
+import object_creator.classes.*;
+import object_creator.handlers.*;
 import object_creator.helpers.ObjectHelper;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,8 @@ public class ObjectCreator extends Screen {
     private ArrayList<ObjectType> objects;
     public ArrayList<ObjectType> getObjects() { return objects; }
     public void addObject(ObjectType newObject) { objects.add(newObject); }
+    public void addObject(int index, ObjectType newObject) { objects.add(index, newObject); }
+    public void remObject(int index) { objects.remove(index); }
 
     public ObjectCreator() {
         objects = new ArrayList<ObjectType>();
@@ -66,14 +69,27 @@ public class ObjectCreator extends Screen {
             int len = objects.size();
             for (i = 0; i < len; i++) {
                 if (selection == i) {
-                    // RETURN NEW EDIT SCREEN FOR objects.get(i);
-                    return this;
+                    return editObject(objects.get(selection), selection);
                 }
             }
             if (selection == len) {
                 return new CreateObject(this);
             }
         }
+        return this;
+    }
+
+    private Screen editObject(ObjectType o, int index) {
+        if (o.getClass() == PrimitiveObject.class)
+            return new PrimitiveHandler(this, (PrimitiveObject)o, index);
+        else if (o.getClass() == PrimitiveArray.class)
+            return new PrimitiveArrayHandler(this, (PrimitiveArray)o, index);
+        else if (o.getClass() == ReferenceObject.class)
+            return new ReferenceHandler(this, (ReferenceObject)o, index);
+        else if (o.getClass() == ReferenceArray.class)
+            return new ReferenceArrayHandler(this, (ReferenceArray)o, index);
+        else if (o.getClass() == ReferenceList.class)
+            return new ReferenceListHandler(this, (ReferenceList)o, index);
         return this;
     }
 }

@@ -16,10 +16,17 @@ public class ReferenceListHandler extends Screen {
     private int selection;
     private boolean editMode;
     private String editString = "";
+    private int returnIndex = -1;
 
     public ReferenceListHandler(ObjectCreator objectCreator) {
         this.objectCreator = objectCreator;
         objs = new ReferenceList();
+    }
+
+    public ReferenceListHandler(ObjectCreator objectCreator, ReferenceList objs, int index) {
+        this.objectCreator = objectCreator;
+        this.objs = objs;
+        this.returnIndex = index;
     }
 
     @Override
@@ -104,7 +111,12 @@ public class ReferenceListHandler extends Screen {
                 return new ObjectSelectorList(this, objs.objects, objectCreator.getObjects());
             } else if (selection == save_object) {
                 /* Save the object */
-                objectCreator.addObject(objs);
+                if (returnIndex > -1) {
+                    objectCreator.remObject(returnIndex);
+                    objectCreator.addObject(returnIndex, objs);
+                } else {
+                    objectCreator.addObject(objs);
+                }
                 return objectCreator;
             } else {
                 /* Modify the object at a position */

@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 import object_creator.ObjectCreator;
 import object_creator.classes.PrimitiveObject;
+import object_creator.helpers.ObjectHelper;
 
 public class PrimitiveHandler extends Screen {
     private ObjectCreator objectCreator;
@@ -35,14 +36,14 @@ public class PrimitiveHandler extends Screen {
         int i;
         int x = 4;
         int y = 3;
-        for (i = 0; i < obj.getFields().length; i++) {
+        for (i = 0; i < ObjectHelper.getFields(obj).length; i++) {
             Color c = (i == selection) ? Color.GREEN : Color.WHITE;
             String s;
             if (i == selection && editMode) {
-                s = obj.getFields()[i] + " = " + editString;
+                s = ObjectHelper.getFields(obj)[i] + " = " + editString;
                 terminal.write(" ", x + s.length(), y, Color.BLACK, Color.LIGHT_GRAY);
             } else {
-                s = obj.getFields()[i] + " = " + obj.getStringValue(i);
+                s = ObjectHelper.getFields(obj)[i] + " = " + getValue(i);
             }
             terminal.write(s, x, y, c);
             y++;
@@ -63,15 +64,15 @@ public class PrimitiveHandler extends Screen {
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
             if (!editMode) {
                 selection++;
-                if (selection >= obj.getFields().length + 1) { selection = 0; }
+                if (selection >= ObjectHelper.getFields(obj).length + 1) { selection = 0; }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_UP) {
             if (!editMode) {
                 selection--;
-                if (selection < 0) { selection = obj.getFields().length - 1 + 1; }
+                if (selection < 0) { selection = ObjectHelper.getFields(obj).length - 1 + 1; }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (selection == obj.getFields().length - 1 + 1) {
+            if (selection == ObjectHelper.getFields(obj).length - 1 + 1) {
                 objectCreator.addObject(obj);
                 return objectCreator;
             } else if (!editMode) {
@@ -143,5 +144,21 @@ public class PrimitiveHandler extends Screen {
 
     private void typeError(String type) {
         errorString = "Must be of type " + type;
+    }
+
+    private String getValue(int index) {
+        String value = "";
+        switch(index) {
+            case 0: value = obj.name; break;
+            case 1: value = Byte.toString(obj.b); break;
+            case 2: value = Character.toString(obj.c); break;
+            case 3: value = Double.toString(obj.d); break;
+            case 4: value = Float.toString(obj.f); break;
+            case 5: value = Integer.toString(obj.i); break;
+            case 6: value = Long.toString(obj.j); break;
+            case 7: value = Short.toString(obj.s); break;
+            case 8: value = Boolean.toString(obj.z);
+        }
+        return value;
     }
 }

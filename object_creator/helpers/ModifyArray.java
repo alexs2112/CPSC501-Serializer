@@ -208,7 +208,7 @@ public class ModifyArray extends Screen {
             c = (selection == i + 1) ? Color.GREEN : Color.WHITE;
             s = "[" + Integer.toString(i) + "] ";
             if (objects[i] != null) {
-                s += objects[i].name + "  (" + objects[i].getTypeString() + ")";
+                s += objects[i].name + "  (" + ObjectHelper.getTypeString(objects[i]) + ")";
             } else {
                 s += "null";
             }

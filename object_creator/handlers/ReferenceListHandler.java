@@ -8,6 +8,7 @@ import object_creator.ObjectCreator;
 import object_creator.classes.ObjectType;
 import object_creator.classes.ReferenceList;
 import object_creator.helpers.ObjectSelectorList;
+import object_creator.helpers.ObjectHelper;
 
 public class ReferenceListHandler extends Screen {
     private ReferenceList objs;
@@ -42,6 +43,7 @@ public class ReferenceListHandler extends Screen {
         terminal.write(s, x, y, c);
         y += 2;
         terminal.write("List Values", x, y);
+        y++;
         x += 2;
 
         int i = 0;
@@ -54,7 +56,7 @@ public class ReferenceListHandler extends Screen {
             for (i = 0; i < objs.objects.size(); i++) {
                 ObjectType o = objs.objects.get(i);
                 c = (selection == (i + 1)) ? Color.GREEN : Color.WHITE;
-                s = o.name + "  (" + o.getTypeString() + ")";
+                s = o.name + "  (" + ObjectHelper.getTypeString(o) + ")";
                 terminal.write(s, x, y, c);
                 y++;
             }

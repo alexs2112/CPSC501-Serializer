@@ -7,6 +7,7 @@ import asciiPanel.AsciiPanel;
 import object_creator.ObjectCreator;
 import object_creator.classes.PrimitiveArray;
 import object_creator.helpers.ModifyArray;
+import object_creator.helpers.ObjectHelper;
 
 public class PrimitiveArrayHandler extends Screen {
     private ObjectCreator objectCreator;
@@ -43,9 +44,9 @@ public class PrimitiveArrayHandler extends Screen {
         y++;
 
         int i;
-        for (i = 1; i < obj.getFields().length; i++) {
+        for (i = 1; i < ObjectHelper.getFields(obj).length; i++) {
             c = (i == selection) ? Color.GREEN : Color.WHITE;
-            s = obj.getFields()[i];
+            s = ObjectHelper.getFields(obj)[i];
             terminal.write(s, x, y, c);
             y++;
         }
@@ -62,15 +63,15 @@ public class PrimitiveArrayHandler extends Screen {
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
             if (!editMode) {
                 selection++;
-                if (selection >= obj.getFields().length + 1) { selection = 0; }
+                if (selection >= ObjectHelper.getFields(obj).length + 1) { selection = 0; }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_UP) {
             if (!editMode) {
                 selection--;
-                if (selection < 0) { selection = obj.getFields().length - 1 + 1; }
+                if (selection < 0) { selection = ObjectHelper.getFields(obj).length - 1 + 1; }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (selection == obj.getFields().length - 1 + 1) {
+            if (selection == ObjectHelper.getFields(obj).length - 1 + 1) {
                 objectCreator.addObject(obj);
                 return objectCreator;
             } else if (selection == 0) {
@@ -114,8 +115,8 @@ public class PrimitiveArrayHandler extends Screen {
     }
 
     private void drawArrayValues(AsciiPanel terminal, int x, int y) {
-        if (selection == 0 || selection == obj.getFields().length) { return; }
-        terminal.write(obj.getFields()[selection], x, y, Color.WHITE);
+        if (selection == 0 || selection == ObjectHelper.getFields(obj).length) { return; }
+        terminal.write(ObjectHelper.getFields(obj)[selection], x, y, Color.WHITE);
         y += 2;
         switch(selection) {
             case 1:

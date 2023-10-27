@@ -9,6 +9,7 @@ import object_creator.ObjectCreator;
 import object_creator.classes.ObjectType;
 import object_creator.classes.ReferenceArray;
 import object_creator.helpers.ModifyArray;
+import object_creator.helpers.ObjectHelper;
 
 public class ReferenceArrayHandler extends Screen {
     private ReferenceArray objs;
@@ -44,7 +45,7 @@ public class ReferenceArrayHandler extends Screen {
         y++;
 
         c = (selection == 1) ? Color.GREEN : Color.WHITE;
-        s = objs.getFields()[1];
+        s = ObjectHelper.getFields(objs)[1];
         terminal.write(s, x, y, c);
         drawArrayValues(terminal, 40, 6);
 
@@ -57,10 +58,10 @@ public class ReferenceArrayHandler extends Screen {
     public Screen input(KeyEvent key) {
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
             selection++;
-            if (selection >= objs.getFields().length + 1) { selection = 0; }
+            if (selection >= ObjectHelper.getFields(objs).length + 1) { selection = 0; }
         } else if (key.getKeyCode() == KeyEvent.VK_UP) {   
             selection--;
-            if (selection < 0) { selection = objs.getFields().length - 1 + 1; }
+            if (selection < 0) { selection = ObjectHelper.getFields(objs).length - 1 + 1; }
         } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (editMode) { editMode = false; }
             else { return objectCreator; }
@@ -103,8 +104,8 @@ public class ReferenceArrayHandler extends Screen {
     }
 
     private void drawArrayValues(AsciiPanel terminal, int x, int y) {
-        if (selection == 0 || selection == objs.getFields().length) { return; }
-        terminal.write(objs.getFields()[selection], x, y, Color.WHITE);
+        if (selection == 0 || selection == ObjectHelper.getFields(objs).length) { return; }
+        terminal.write(ObjectHelper.getFields(objs)[selection], x, y, Color.WHITE);
         y += 2;
         if (objs.objects == null || objs.objects.length == 0) {
             terminal.write("Empty or Null Array", x, y);
@@ -112,7 +113,7 @@ public class ReferenceArrayHandler extends Screen {
             for (ObjectType o : objs.objects) {
                 String s;
                 if (o == null) { s = "null"; }
-                else { s = o.name + "  (" + o.getTypeString() + ")"; }
+                else { s = o.name + "  (" + ObjectHelper.getTypeString(o) + ")"; }
                 terminal.write(s, x, y);
                 y++;
             }

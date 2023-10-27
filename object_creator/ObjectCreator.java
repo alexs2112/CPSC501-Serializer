@@ -3,6 +3,7 @@ package object_creator;
 import application.Screen;
 import asciiPanel.AsciiPanel;
 import object_creator.classes.ObjectType;
+import object_creator.helpers.ObjectHelper;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -35,11 +36,11 @@ public class ObjectCreator extends Screen {
                 Color c = (i == selection) ? Color.GREEN : Color.WHITE;
                 ObjectType o = objects.get(i);
                 terminal.write(o.name, x, y, c);
-                terminal.write(o.getTypeString(), x+20, y, c);
+                terminal.write(ObjectHelper.getTypeString(o), x+20, y, c);
                 y++;
 
                 if (i == selection) {
-                    o.displayObject(terminal, 40, 8);
+                    ObjectHelper.displayObject(o, terminal, 40, 8);
                 }
             }
         }

@@ -43,11 +43,11 @@ public class ObjectSelector extends Screen {
                 Color c = (i == selection) ? Color.GREEN : Color.WHITE;
                 ObjectType o = objects.get(i);
                 terminal.write(o.name, x, y, c);
-                terminal.write(o.getTypeString(), x+20, y, c);
+                terminal.write(ObjectHelper.getTypeString(o), x+20, y, c);
                 y++;
 
                 if (i == selection) {
-                    o.displayObject(terminal, 40, 8);
+                    ObjectHelper.displayObject(o, terminal, 40, 8);
                 }
             }
         }

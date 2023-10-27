@@ -7,6 +7,7 @@ import java.awt.Color;
 import object_creator.ObjectCreator;
 import object_creator.classes.ReferenceObject;
 import object_creator.helpers.ObjectSelector;
+import object_creator.helpers.ObjectHelper;
 import object_creator.classes.ObjectType;
 
 public class ReferenceHandler extends Screen {
@@ -31,14 +32,15 @@ public class ReferenceHandler extends Screen {
         int i;
         int x = 4;
         int y = 3;
-        for (i = 0; i < obj.getFields().length; i++) {
+        String[] fields = ObjectHelper.getFields(obj);
+        for (i = 0; i < fields.length; i++) {
             Color c = (i == selection) ? Color.GREEN : Color.WHITE;
             String s;
             if (i == 0 && editMode) {
-                s = obj.getFields()[i] + " = " + editString;
+                s = fields[i] + " = " + editString;
                 terminal.write(" ", x + s.length(), y, Color.BLACK, Color.LIGHT_GRAY);
             } else {
-                s = obj.getFields()[i] + " = " + obj.getStringValue(i);
+                s = fields[i] + " = " + getReferenceValue(i);
             }
 
             terminal.write(s, x, y, c);
@@ -46,9 +48,9 @@ public class ReferenceHandler extends Screen {
 
             if (i == selection) {
                 /* Man this is ugly */
-                if (i == 1 && obj.A != null) obj.A.displayObject(terminal, 40, 8);
-                else if (i == 2 && obj.B != null) obj.B.displayObject(terminal, 40, 8);
-                else if (i == 3 && obj.C != null) obj.C.displayObject(terminal, 40, 8);
+                if (i == 1 && obj.A != null) ObjectHelper.displayObject(obj.A, terminal, 40, 8);
+                else if (i == 2 && obj.B != null) ObjectHelper.displayObject(obj.B, terminal, 40, 8);
+                else if (i == 3 && obj.C != null) ObjectHelper.displayObject(obj.C, terminal, 40, 8);
             }
         }
 
@@ -62,10 +64,10 @@ public class ReferenceHandler extends Screen {
     public Screen input(KeyEvent key) {
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
             selection++;
-            if (selection >= obj.getFields().length + 1) { selection = 0; }
+            if (selection >= ObjectHelper.getFields(obj).length + 1) { selection = 0; }
         } else if (key.getKeyCode() == KeyEvent.VK_UP) {   
             selection--;
-            if (selection < 0) { selection = obj.getFields().length - 1 + 1; }
+            if (selection < 0) { selection = ObjectHelper.getFields(obj).length - 1 + 1; }
         } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (editMode) { editMode = false; }
             else { return objectCreator; }
@@ -98,6 +100,23 @@ public class ReferenceHandler extends Screen {
             } catch (java.lang.IllegalArgumentException e) { /* Ignore invalid characters */ }
         }
         return this;
+    }
+
+    private String getReferenceValue(int index) {
+        String value = "";
+        switch(index) {
+            case 0: value = obj.name; break;
+            case 1: 
+                if (obj.A == null) { value = "<null>"; break; }
+                else { value = obj.A.name + " (" + ObjectHelper.getTypeString(obj.A) + ")"; break; }
+            case 2: 
+                if (obj.B == null) { value = "<null>"; break; }
+                else { value = obj.B.name + " (" + ObjectHelper.getTypeString(obj.B) + ")"; break; }
+            case 3: 
+                if (obj.C == null) { value = "<null>"; break; }
+                else { value = obj.C.name + " (" + ObjectHelper.getTypeString(obj.C) + ")"; break; }
+        }
+        return value;
     }
 
     public void addReference(ObjectType ref) {

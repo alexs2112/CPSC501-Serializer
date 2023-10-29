@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 public class ObjectMap {
     private HashMap<Integer, Object> objects;
     public HashMap<Integer, Object> getObjects() { return objects; }
+    public Object get(int i) { return objects.get(i); }
     private static final Class[] wrapperClasses = new Class[] {
         Boolean.class,
         Character.class,
@@ -79,8 +80,8 @@ public class ObjectMap {
 
     /* Recursively get all public and protected fields of the object (including superclass) */
     /* Method copied from Assignment 2 */
-    private Field[] findFields(Class c) { return findFields(c, false); }
-    private Field[] findFields(Class c, boolean isSuperclass) {
+    public static Field[] findFields(Class c) { return findFields(c, false); }
+    private static Field[] findFields(Class c, boolean isSuperclass) {
         Field[] fs = c.getDeclaredFields();
 
         for (int i = 0; i < fs.length; i++) {
@@ -100,7 +101,7 @@ public class ObjectMap {
 
     /* Concatenate two arrays of fields as this isn't just default java implementation */
     /* Method copied from Assignment 2 */
-    private Field[] concat(Field[] a, Field[] b) {
+    private static Field[] concat(Field[] a, Field[] b) {
         int alen = a.length;
         if (alen == 0) { return b; }
         
@@ -120,7 +121,7 @@ public class ObjectMap {
 
     /* Check if an object is a wrapper object (eg. Integer instead of int) */
     /* Method copied from Assignment 2 */
-    private boolean isPrimitive(Object o) {
+    public static boolean isPrimitive(Object o) {
         for (Class c : wrapperClasses) {
             if (o.getClass() == c) { return true; }
         }

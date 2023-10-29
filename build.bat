@@ -1,7 +1,8 @@
-javac application/*.java
-javac object_creator/*.java
-javac object_creator/classes/*.java
-javac object_creator/handlers/*.java
-javac object_creator/helpers/*.java
-javac serializer/*.java
-javac unit_tests/*.java
+javac ^
+    application/*.java ^
+    object_creator/*.java ^
+    object_creator/classes/*.java ^
+    object_creator/handlers/*.java ^
+    object_creator/helpers/*.java ^
+    serializer/*.java ^
+    unit_tests/*.java

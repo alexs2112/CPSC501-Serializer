@@ -7,5 +7,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     TestMap.class,
+    TestSerializer.class,
 })
 public class TestAll { }

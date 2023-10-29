@@ -56,9 +56,7 @@ public class Serializer {
                 int length = Array.getLength(value);
                 for (int i = 0; i < length; i++) {
                     Object o = Array.get(value, i);
-                    if (o == null) { continue; }
-                    if (isPrimitive(o)) { continue; }
-                    if (objects.containsKey(value.hashCode())) { continue; }
+                    if (!isValidObject(o)) { continue; }
 
                     populateMap(o);
                 }
@@ -68,20 +66,23 @@ public class Serializer {
                 int length = l.size();
                 for (int i = 0; i < length; i++) {
                     Object o = l.get(i);
-                    if (o == null) { continue; }
-                    if (isPrimitive(o)) { continue; }
-                    if (objects.containsKey(value.hashCode())) { continue; }
+                    if (!isValidObject(o)) { continue; }
 
                     populateMap(o);
                 }
             } else {
                 // If it isn't a primitive object, populate it if it isn't already in the list
-                if (isPrimitive(value)) { continue; }
-                if (objects.containsKey(value.hashCode())) { continue; }
-
+                if (!isValidObject(value)) { continue; }
                 populateMap(value);
             }
         }
+    }
+
+    private boolean isValidObject(Object o) {
+        if (o == null) { return false; }
+        if (isPrimitive(o)) { return false; }
+        if (objects.containsKey(o.hashCode())) { return false; }
+        return true;
     }
 
     /* Recursively get all public and protected fields of the object (including superclass) */

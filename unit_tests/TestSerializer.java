@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import java.util.ArrayList;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import serializer.Serializer;
@@ -41,6 +42,31 @@ public class TestSerializer {
         Element A = root.getChildren().get(0);
         assertEquals("object_creator.classes.PrimitiveObject", A.getAttributeValue("class"));
         assertEquals(Integer.toString(a.hashCode()), A.getAttributeValue("id"));
+    }
+
+    @Test
+    public void TestHeaderArray() {
+        int[] a = new int[] { 1, 2, 3, 4 };
+        Document d = serializer.serialize(a);
+        Element root = d.getRootElement();
+        Element A = root.getChildren().get(0);
+        assertEquals("[I", A.getAttributeValue("class"));
+        assertEquals(Integer.toString(a.hashCode()), A.getAttributeValue("id"));
+        assertEquals("4", A.getAttributeValue("length"));
+    }
+
+    @Test
+    public void TestHeaderList() {
+        ArrayList<Object> o = new ArrayList<Object>();
+        o.add(null);
+        o.add(null);
+
+        Document d = serializer.serialize(o);
+        Element root = d.getRootElement();
+        Element A = root.getChildren().get(0);
+        assertEquals("java.util.ArrayList", A.getAttributeValue("class"));
+        assertEquals(Integer.toString(o.hashCode()), A.getAttributeValue("id"));
+        assertEquals("2", A.getAttributeValue("size"));
     }
 
     @Test
@@ -86,5 +112,45 @@ public class TestSerializer {
         if (ref == null) { fail("Could not find object with expected id."); }
 
         assertEquals(Integer.toString(a.hashCode()), getFieldReference(ref, "A"));
+    }
+
+    @Test
+    public void TestArrayReferences() {
+        PrimitiveArray a = new PrimitiveArray();
+        a.ints = new int[] { 0 };
+        a.doubles = new double[] { 1.0 };
+        a.bools = new boolean[] { true };
+
+        Document d = serializer.serialize(a);
+        Element root = d.getRootElement();
+        Element ref = null;
+        for (Element e : root.getChildren()) {
+            if (e.getAttributeValue("id").equals(Integer.toString(a.hashCode())))
+                ref = e;
+        }
+        if (ref == null) { fail("Could not find object with expected id."); }
+
+        assertEquals(Integer.toString(a.ints.hashCode()), getFieldReference(ref, "ints"));
+        assertEquals(Integer.toString(a.doubles.hashCode()), getFieldReference(ref, "doubles"));
+        assertEquals(Integer.toString(a.bools.hashCode()), getFieldReference(ref, "bools"));
+        assertEquals(4, root.getChildren().size());
+    }
+
+    @Test
+    public void TestListReferences() {
+        ReferenceList o = new ReferenceList();
+        // Constructor instantiates o.objects
+
+        Document d = serializer.serialize(o);
+        Element root = d.getRootElement();
+        Element ref = null;
+        for (Element e : root.getChildren()) {
+            if (e.getAttributeValue("id").equals(Integer.toString(o.hashCode())))
+                ref = e;
+        }
+        if (ref == null) { fail("Could not find object with expected id."); }
+
+        assertEquals(Integer.toString(o.objects.hashCode()), getFieldReference(ref, "objects"));
+        assertEquals(2, root.getChildren().size());
     }
 }

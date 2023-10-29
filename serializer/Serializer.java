@@ -2,10 +2,12 @@ package serializer;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import serializer.helpers.FieldHelper;
 
+@SuppressWarnings("rawtypes")
 public class Serializer {
     ObjectMap objects;
 
@@ -29,14 +31,16 @@ public class Serializer {
         e.setAttribute("id", Integer.toString(obj.hashCode()));
         if (obj.getClass().isArray()) {
             e.setAttribute("length", Integer.toString(Array.getLength(obj)));
+        } else if (obj.getClass() == ArrayList.class) {
+            e.setAttribute("size", Integer.toString(((ArrayList)obj).size()));
         } else {
-            serializeFields(obj, e);
+            serializeNormalObject(obj, e);
         }
 
         return e;
     }
 
-    private void serializeFields(Object obj, Element element) {
+    private void serializeNormalObject(Object obj, Element element) {
         Field[] fields = FieldHelper.findFields(obj.getClass());
         if (fields.length == 0) { return; }
         for(Field f : fields) {
@@ -49,16 +53,12 @@ public class Serializer {
                 continue;
             }
 
-            if (f.getType().isArray()) {
-                // Parse array fields
-            } else {
-                Element e = serializeNormalField(obj, f, value);
-                element.addContent(e);
-            }
+            Element e = serializeField(obj, f, value);
+            element.addContent(e);
         }
     }
 
-    private Element serializeNormalField(Object obj, Field f, Object value) {
+    private Element serializeField(Object obj, Field f, Object value) {
         Element e = new Element("field");
         e.setAttribute("name", f.getName());
         e.setAttribute("declaringclass", obj.getClass().getName());

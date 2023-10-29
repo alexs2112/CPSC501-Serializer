@@ -103,7 +103,7 @@ public class TestMap {
             a, b, c
         };
         objects.populate(o);
-        assertEquals(4, mapSize());
+        assertEquals(5, mapSize());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TestMap {
         o.doubles = new double[] { 0.0, 1.1, 2.2 };
         o.bools = new boolean[] { true, false, true };
         objects.populate(o);
-        assertEquals(1, mapSize());
+        assertEquals(4, mapSize());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class TestMap {
             a, a, a, a, a
         };
         objects.populate(o);
-        assertEquals(2, mapSize());
+        assertEquals(3, mapSize());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class TestMap {
             arr1, arr2
         };
         objects.populate(o);
-        assertEquals(6, mapSize());
+        assertEquals(9, mapSize());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class TestMap {
             r, c
         };
         objects.populate(o);
-        assertEquals(5, mapSize());
+        assertEquals(6, mapSize());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class TestMap {
         o.objects.add(a);
         o.objects.add(b);
         objects.populate(o);
-        assertEquals(3, mapSize());
+        assertEquals(4, mapSize());
     }
 
     @Test
@@ -185,7 +185,7 @@ public class TestMap {
         o.objects.add(a);
         o.objects.add(b);
         objects.populate(o);
-        assertEquals(3, mapSize());
+        assertEquals(4, mapSize());
     }
 
     @Test
@@ -207,6 +207,6 @@ public class TestMap {
         o.objects.add(arr2);
 
         objects.populate(o);
-        assertEquals(6, mapSize());
+        assertEquals(9, mapSize());
     }
 }

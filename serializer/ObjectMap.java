@@ -34,6 +34,7 @@ public class ObjectMap {
             if (value == null) { continue; }
             if (f.getType().isArray()) {
                 // Handle array
+                objects.put(value.hashCode(), value);
                 int length = Array.getLength(value);
                 for (int i = 0; i < length; i++) {
                     Object o = Array.get(value, i);
@@ -43,6 +44,7 @@ public class ObjectMap {
                 }
             } else if (value.getClass() == ArrayList.class) {
                 // Handle ArrayList from java.util.Collections
+                objects.put(value.hashCode(), value);
                 ArrayList l = (ArrayList)value;
                 int length = l.size();
                 for (int i = 0; i < length; i++) {

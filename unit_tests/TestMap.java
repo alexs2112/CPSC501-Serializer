@@ -23,14 +23,14 @@ public class TestMap {
     public void TestBasic() {
         PrimitiveObject o = new PrimitiveObject();
         serializer.serialize(o);
-        assertEquals(mapSize(), 1);
+        assertEquals(1, mapSize());
     }
 
     @Test
     public void TestNullFields() {
         ReferenceObject o = new ReferenceObject();
         serializer.serialize(o);
-        assertEquals(mapSize(), 1);
+        assertEquals(1, mapSize());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class TestMap {
         o.B = b;
         o.C = c;
         serializer.serialize(o);
-        assertEquals(mapSize(), 4);
+        assertEquals(4, mapSize());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class TestMap {
         o.B = a;
         o.C = a;
         serializer.serialize(o);
-        assertEquals(mapSize(), 2);
+        assertEquals(2, mapSize());
     }
 
     @Test
@@ -67,10 +67,10 @@ public class TestMap {
         ro.B = b;
         o.A = ro;
         serializer.serialize(o);
-        assertEquals(mapSize(), 4);
+        assertEquals(4, mapSize());
 
         serializer.serialize(ro);
-        assertEquals(mapSize(), 3);
+        assertEquals(3, mapSize());
     }
 
     @Test
@@ -85,10 +85,10 @@ public class TestMap {
         o.A = ro;
         o.B = a;
         serializer.serialize(o);
-        assertEquals(mapSize(), 4);
+        assertEquals(4, mapSize());
 
         serializer.serialize(ro);
-        assertEquals(mapSize(), 3);
+        assertEquals(3, mapSize());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class TestMap {
             a, b, c
         };
         serializer.serialize(o);
-        assertEquals(mapSize(), 4);
+        assertEquals(4, mapSize());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class TestMap {
         o.doubles = new double[] { 0.0, 1.1, 2.2 };
         o.bools = new boolean[] { true, false, true };
         serializer.serialize(o);
-        assertEquals(mapSize(), 1);
+        assertEquals(1, mapSize());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class TestMap {
             a, a, a, a, a
         };
         serializer.serialize(o);
-        assertEquals(mapSize(), 2);
+        assertEquals(2, mapSize());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class TestMap {
             arr1, arr2
         };
         serializer.serialize(o);
-        assertEquals(mapSize(), 6);
+        assertEquals(6, mapSize());
     }
 
     @Test
@@ -159,6 +159,52 @@ public class TestMap {
             r, c
         };
         serializer.serialize(o);
-        assertEquals(mapSize(), 5);
+        assertEquals(5, mapSize());
+    }
+
+    @Test
+    public void TestArrayList() {
+        PrimitiveObject a = new PrimitiveObject();
+        PrimitiveObject b = new PrimitiveObject();
+        ReferenceList o = new ReferenceList();
+        o.objects.add(a);
+        o.objects.add(b);
+        serializer.serialize(o);
+        assertEquals(3, mapSize());
+    }
+
+    @Test
+    public void TestArrayListDuplicates() {
+        PrimitiveObject a = new PrimitiveObject();
+        PrimitiveObject b = new PrimitiveObject();
+        ReferenceList o = new ReferenceList();
+        o.objects.add(a);
+        o.objects.add(b);
+        o.objects.add(a);
+        o.objects.add(b);
+        serializer.serialize(o);
+        assertEquals(3, mapSize());
+    }
+
+    @Test
+    public void TestArrayListNestedArray() {
+        PrimitiveObject a = new PrimitiveObject();
+        PrimitiveObject b = new PrimitiveObject();
+        ReferenceArray arr1 = new ReferenceArray();
+        arr1.objects = new ObjectType[] {
+            a, b
+        };
+        PrimitiveObject c = new PrimitiveObject();
+        ReferenceArray arr2 = new ReferenceArray();
+        arr2.objects = new ObjectType[] {
+            c
+        };
+
+        ReferenceList o = new ReferenceList();
+        o.objects.add(arr1);
+        o.objects.add(arr2);
+
+        serializer.serialize(o);
+        assertEquals(6, mapSize());
     }
 }

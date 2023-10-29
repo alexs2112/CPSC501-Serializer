@@ -3,6 +3,7 @@ package serializer;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Array;
@@ -55,6 +56,18 @@ public class Serializer {
                 int length = Array.getLength(value);
                 for (int i = 0; i < length; i++) {
                     Object o = Array.get(value, i);
+                    if (o == null) { continue; }
+                    if (isPrimitive(o)) { continue; }
+                    if (objects.containsKey(value.hashCode())) { continue; }
+
+                    populateMap(o);
+                }
+            } else if (value.getClass() == ArrayList.class) {
+                // Handle ArrayList from java.util.Collections
+                ArrayList l = (ArrayList)value;
+                int length = l.size();
+                for (int i = 0; i < length; i++) {
+                    Object o = l.get(i);
                     if (o == null) { continue; }
                     if (isPrimitive(o)) { continue; }
                     if (objects.containsKey(value.hashCode())) { continue; }

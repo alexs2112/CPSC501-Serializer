@@ -4,32 +4,32 @@ import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 
-import serializer.Serializer;
+import serializer.ObjectMap;
 import object_creator.classes.*;
 
 public class TestMap {
-    private Serializer serializer;
+    private ObjectMap objects;
 
     @Before
     public void setup() {
-        serializer = new Serializer();
+        objects = new ObjectMap();
     }
 
     private int mapSize() {
-        return serializer.getObjects().keySet().size();
+        return objects.getObjects().keySet().size();
     }
     
     @Test
     public void TestBasic() {
         PrimitiveObject o = new PrimitiveObject();
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(1, mapSize());
     }
 
     @Test
     public void TestNullFields() {
         ReferenceObject o = new ReferenceObject();
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(1, mapSize());
     }
 
@@ -42,7 +42,7 @@ public class TestMap {
         o.A = a;
         o.B = b;
         o.C = c;
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(4, mapSize());
     }
 
@@ -53,7 +53,7 @@ public class TestMap {
         o.A = a;
         o.B = a;
         o.C = a;
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(2, mapSize());
     }
 
@@ -66,10 +66,11 @@ public class TestMap {
         ro.A = a;
         ro.B = b;
         o.A = ro;
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(4, mapSize());
 
-        serializer.serialize(ro);
+        setup();
+        objects.populate(ro);
         assertEquals(3, mapSize());
     }
 
@@ -84,10 +85,11 @@ public class TestMap {
         ro.C = a;
         o.A = ro;
         o.B = a;
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(4, mapSize());
 
-        serializer.serialize(ro);
+        setup();
+        objects.populate(ro);
         assertEquals(3, mapSize());
     }
 
@@ -100,7 +102,7 @@ public class TestMap {
         o.objects = new ObjectType[] {
             a, b, c
         };
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(4, mapSize());
     }
 
@@ -110,7 +112,7 @@ public class TestMap {
         o.ints = new int[] { 0, 1, 2 };
         o.doubles = new double[] { 0.0, 1.1, 2.2 };
         o.bools = new boolean[] { true, false, true };
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(1, mapSize());
     }
 
@@ -121,7 +123,7 @@ public class TestMap {
         o.objects = new ObjectType[] {
             a, a, a, a, a
         };
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(2, mapSize());
     }
 
@@ -142,7 +144,7 @@ public class TestMap {
         o.objects = new ObjectType[] {
             arr1, arr2
         };
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(6, mapSize());
     }
 
@@ -158,7 +160,7 @@ public class TestMap {
         o.objects = new ObjectType[] {
             r, c
         };
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(5, mapSize());
     }
 
@@ -169,7 +171,7 @@ public class TestMap {
         ReferenceList o = new ReferenceList();
         o.objects.add(a);
         o.objects.add(b);
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(3, mapSize());
     }
 
@@ -182,7 +184,7 @@ public class TestMap {
         o.objects.add(b);
         o.objects.add(a);
         o.objects.add(b);
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(3, mapSize());
     }
 
@@ -204,7 +206,7 @@ public class TestMap {
         o.objects.add(arr1);
         o.objects.add(arr2);
 
-        serializer.serialize(o);
+        objects.populate(o);
         assertEquals(6, mapSize());
     }
 }

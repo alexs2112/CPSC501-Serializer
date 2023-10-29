@@ -229,4 +229,25 @@ public class TestSerializer {
             }
         }
     }
+
+    @Test
+    public void TestReferenceList() {
+        ReferenceList o = new ReferenceList();
+        PrimitiveObject a = new PrimitiveObject();
+        PrimitiveObject b = new PrimitiveObject();
+        o.objects.add(a);
+        o.objects.add(b);
+
+        Document d = serializer.serialize(o);
+        Element root = d.getRootElement();
+        for (Element e : root.getChildren()) {
+            if (e.getAttributeValue("id").equals(Integer.toString(o.objects.hashCode()))) {
+                Element c = e.getChildren().get(0);
+                assertEquals(Integer.toString(a.hashCode()), c.getTextNormalize());
+                
+                c = e.getChildren().get(1);
+                assertEquals(Integer.toString(b.hashCode()), c.getTextNormalize());
+            }
+        }
+    }
 }

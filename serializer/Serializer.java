@@ -34,6 +34,7 @@ public class Serializer {
             serializeArray(obj, e);
         } else if (obj.getClass() == ArrayList.class) {
             e.setAttribute("size", Integer.toString(((ArrayList)obj).size()));
+            serializeArrayList(obj, e);
         } else {
             serializeNormalObject(obj, e);
         }
@@ -73,6 +74,15 @@ public class Serializer {
         int length = Array.getLength(obj);
         for (int i = 0; i < length; i++) {
             Object o = Array.get(obj, i);
+            Element value = serializeValue(o);
+            element.addContent(value);
+        }
+    }
+
+    private void serializeArrayList(Object obj, Element element) {
+        ArrayList list = (ArrayList)obj;
+        for (int i = 0; i < list.size(); i++) {
+            Object o = list.get(i);
             Element value = serializeValue(o);
             element.addContent(value);
         }

@@ -31,6 +31,7 @@ public class Serializer {
         e.setAttribute("id", Integer.toString(obj.hashCode()));
         if (obj.getClass().isArray()) {
             e.setAttribute("length", Integer.toString(Array.getLength(obj)));
+            serializeArray(obj, e);
         } else if (obj.getClass() == ArrayList.class) {
             e.setAttribute("size", Integer.toString(((ArrayList)obj).size()));
         } else {
@@ -86,5 +87,33 @@ public class Serializer {
             e.addContent(r);
         }
         return e;
+    }
+
+    private void serializeArray(Object obj, Element element) {
+        int length = Array.getLength(obj);
+        for (int i = 0; i < length; i++) {
+            Object o = Array.get(obj, i);
+            
+            if (o == null) {
+                Element f = new Element("value");
+                f.addContent("null");
+                element.addContent(f);
+            } else if (FieldHelper.isPrimitive(o)) {
+                // Special handling for chars because the null char breaks jdom
+                if (o.getClass() == Character.class) {
+                    if ((char)o == '\0') {
+                        char c = ' ';
+                        o = c;
+                    }
+                }
+                Element f = new Element("value");
+                f.addContent(o.toString());
+                element.addContent(f);
+            } else {
+                Element r = new Element("reference");
+                r.addContent(Integer.toString(o.hashCode()));
+                element.addContent(r);
+            }
+        }
     }
 }

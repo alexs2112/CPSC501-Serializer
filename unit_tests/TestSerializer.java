@@ -7,6 +7,9 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.output.XMLOutputter;
+import org.jdom2.output.Format;
+import java.io.IOException;
 import serializer.Serializer;
 import object_creator.classes.*;
 
@@ -31,6 +34,17 @@ public class TestSerializer {
                 return f.getChildTextNormalize("reference");
         }
         return "";
+    }
+
+    /* For testing, delete before final commit */
+    private void printDocument(Document doc) {
+        try {
+            XMLOutputter xmlOutput = new XMLOutputter();
+            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.output(doc, System.out); 
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -152,5 +166,67 @@ public class TestSerializer {
 
         assertEquals(Integer.toString(o.objects.hashCode()), getFieldReference(ref, "objects"));
         assertEquals(2, root.getChildren().size());
+    }
+
+    @Test
+    public void TestPrimitiveArray() {
+        PrimitiveArray o = new PrimitiveArray();
+        o.ints = new int[] { 0, 1 };
+        o.doubles = new double[] { 2.2, 3.3 };
+        o.bools = new boolean[] { true, false };
+
+        Document d = serializer.serialize(o);
+        Element root = d.getRootElement();
+        for (Element e : root.getChildren()) {
+            /* Test ints */
+            if (e.getAttributeValue("id").equals(Integer.toString(o.ints.hashCode()))) {
+                int[] check = new int[2];
+                for (int i = 0; i < 2; i++) {
+                    Element c = e.getChildren().get(i);
+                    check[i] = Integer.valueOf(c.getTextNormalize());
+                }
+                assert(o.ints.equals(check));
+            }
+
+            /* Test doubles */
+            if (e.getAttributeValue("id").equals(Integer.toString(o.doubles.hashCode()))) {
+                double[] check = new double[2];
+                for (int i = 0; i < 2; i++) {
+                    Element c = e.getChildren().get(i);
+                    check[i] = Double.valueOf(c.getTextNormalize());
+                }
+                assert(o.doubles.equals(check));
+            }
+
+            /* Test bools */
+            if (e.getAttributeValue("id").equals(Integer.toString(o.bools.hashCode()))) {
+                boolean[] check = new boolean[2];
+                for (int i = 0; i < 2; i++) {
+                    Element c = e.getChildren().get(i);
+                    check[i] = Boolean.valueOf(c.getTextNormalize());
+                }
+                assert(o.bools.equals(check));
+            }
+        }
+    }
+
+    @Test
+    public void TestReferenceArray() {
+        ReferenceArray o = new ReferenceArray();
+        PrimitiveObject a = new PrimitiveObject();
+        PrimitiveObject b = new PrimitiveObject();
+        o.objects = new ObjectType[] { a, b };
+
+        Document d = serializer.serialize(o);
+        Element root = d.getRootElement();
+        for (Element e : root.getChildren()) {
+            if (e.getAttributeValue("id").equals(Integer.toString(o.objects.hashCode()))) {
+                Element c = e.getChildren().get(0);
+                assertEquals(Integer.toString(a.hashCode()), c.getTextNormalize());
+                
+                c = e.getChildren().get(1);
+                assertEquals(Integer.toString(b.hashCode()), c.getTextNormalize());
+            }
+        }
     }
 }

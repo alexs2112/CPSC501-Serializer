@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import serializer.helpers.FieldHelper;
 
 public class Serializer {
     ObjectMap objects;
@@ -36,7 +37,7 @@ public class Serializer {
     }
 
     private void serializeFields(Object obj, Element element) {
-        Field[] fields = ObjectMap.findFields(obj.getClass());
+        Field[] fields = FieldHelper.findFields(obj.getClass());
         if (fields.length == 0) { return; }
         for(Field f : fields) {
             Object value;
@@ -66,7 +67,7 @@ public class Serializer {
             Element v = new Element("value");
             v.addContent("null");
             e.addContent(v);
-        } else if (ObjectMap.isPrimitive(value)) {
+        } else if (FieldHelper.isPrimitive(value)) {
             Element v = new Element("value");
 
             // Special handling for chars because the null char breaks jdom

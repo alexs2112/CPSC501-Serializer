@@ -5,4 +5,5 @@ javac ^
     object_creator/handlers/*.java ^
     object_creator/helpers/*.java ^
     serializer/*.java ^
+    serializer/helpers/*.java ^
     unit_tests/*.java

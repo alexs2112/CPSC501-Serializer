@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 @SuppressWarnings("rawtypes")
 public class Serializer {
     private HashMap<Integer, Object> objects;
+    public HashMap<Integer, Object> getObjects() { return objects; }
     private static final Class[] wrapperClasses = new Class[] {
         Boolean.class,
         Character.class,
@@ -34,7 +35,7 @@ public class Serializer {
     }
 
     /* Recursively get all objects associated with obj */
-    private void populateMap(Object obj) {
+    public void populateMap(Object obj) {
         objects.put(obj.hashCode(), obj);
 
         Field[] fields = findFields(obj.getClass());

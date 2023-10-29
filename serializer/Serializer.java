@@ -5,6 +5,7 @@ import org.jdom2.Element;
 import java.util.HashMap;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Array;
 
 @SuppressWarnings("rawtypes")
 public class Serializer {
@@ -23,9 +24,9 @@ public class Serializer {
     };
 
     public Document serialize(Object obj) {
+        objects = new HashMap<Integer, Object>();
         populateMap(obj);
 
-        objects = new HashMap<Integer, Object>();
         Element root = new Element("serialized");
         Document doc = new Document(root);
 
@@ -47,8 +48,18 @@ public class Serializer {
                 continue;
             }
 
+            if (value == null) { continue; }
             if (f.getType().isArray()) {
                 // Handle array
+                int length = Array.getLength(value);
+                for (int i = 0; i < length; i++) {
+                    Object o = Array.get(value, i);
+                    if (o == null) { continue; }
+                    if (isPrimitive(o)) { continue; }
+                    if (objects.containsKey(value.hashCode())) { continue; }
+
+                    populateMap(o);
+                }
             } else {
                 // If it isn't a primitive object, populate it if it isn't already in the list
                 if (isPrimitive(value)) { continue; }

@@ -1,6 +1,5 @@
 package application;
 
-import object_creator.ObjectCreator;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
@@ -17,7 +16,7 @@ public class Main extends JFrame implements KeyListener {
         pack();
         addKeyListener(this);
 
-        screen = new ObjectCreator();
+        screen = new MainScreen();
         repaint();
     }
 

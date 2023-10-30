@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class ObjectCreator extends Screen {
+    private Screen returnScreen;
     private int selection;
     private ArrayList<ObjectType> objects;
     public ArrayList<ObjectType> getObjects() { return objects; }
@@ -17,7 +18,8 @@ public class ObjectCreator extends Screen {
     public void addObject(int index, ObjectType newObject) { objects.add(index, newObject); }
     public void remObject(int index) { objects.remove(index); }
 
-    public ObjectCreator() {
+    public ObjectCreator(Screen returnScreen) {
+        this.returnScreen = returnScreen;
         objects = new ArrayList<ObjectType>();
     }
 
@@ -54,16 +56,20 @@ public class ObjectCreator extends Screen {
         x -= 4;
         Color c = (i == selection) ? Color.GREEN : Color.WHITE;
         terminal.write("Create New Object", x, y++, c);
+
+        i++;
+        c = (i == selection) ? Color.GREEN : Color.WHITE;
+        terminal.write("Back to Main Menu", x, y++, c);
     }
 
     @Override
     public Screen input(KeyEvent key) {
         if (key.getKeyCode() == KeyEvent.VK_DOWN) {
             selection++;
-            if (selection >= objects.size() + 1) { selection = 0; }
+            if (selection > objects.size() + 1) { selection = 0; }
         } else if (key.getKeyCode() == KeyEvent.VK_UP) {
             selection--;
-            if (selection < 0) { selection = objects.size() - 1 + 1; }
+            if (selection < 0) { selection = objects.size() - 1 + 2; }
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             int i;
             int len = objects.size();
@@ -75,6 +81,11 @@ public class ObjectCreator extends Screen {
             if (selection == len) {
                 return new CreateObject(this);
             }
+            if (selection == len + 1) {
+                return returnScreen;
+            }
+        } else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            return returnScreen;
         }
         return this;
     }

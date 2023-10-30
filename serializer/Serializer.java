@@ -63,7 +63,7 @@ public class Serializer {
     private Element serializeField(Object obj, Field f, Object value) {
         Element e = new Element("field");
         e.setAttribute("name", f.getName());
-        e.setAttribute("declaringclass", obj.getClass().getName());
+        e.setAttribute("declaringclass", getDeclaringClass(obj.getClass(), f));
 
         Element v = serializeValue(value);
         e.addContent(v);
@@ -109,5 +109,13 @@ public class Serializer {
             r.addContent(Integer.toString(o.hashCode()));
             return r;
         }
+    }
+
+    private String getDeclaringClass(Class c, Field f) {
+        if (c == null) { return ""; }
+        for (Field f2 : c.getDeclaredFields()) {
+            if (f.equals(f2)) { return c.getName(); }
+        }
+        return getDeclaringClass(c.getSuperclass(), f);
     }
 }

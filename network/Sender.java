@@ -22,6 +22,7 @@ public class Sender {
         Socket socket = null;
         try {
             socket = new Socket(host, port);
+            messages.add("Opened socket at " + host + ":" + Integer.toString(port));
         } catch (IOException e) {
             System.out.println(e);
             messages.add("Error: Could not open socket.");

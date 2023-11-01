@@ -7,9 +7,6 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.output.XMLOutputter;
-import org.jdom2.output.Format;
-import java.io.IOException;
 import serializer.Serializer;
 import object_creator.classes.*;
 
@@ -34,17 +31,6 @@ public class TestSerializer {
                 return f.getChildTextNormalize("reference");
         }
         return "";
-    }
-
-    /* For testing, delete before final commit */
-    private void printDocument(Document doc) {
-        try {
-            XMLOutputter xmlOutput = new XMLOutputter();
-            xmlOutput.setFormat(Format.getPrettyFormat());
-            xmlOutput.output(doc, System.out); 
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test

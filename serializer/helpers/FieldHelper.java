@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 
 @SuppressWarnings("rawtypes")
 public class FieldHelper {
-    private static final Class[] wrapperClasses = new Class[] {
+    public static final Class[] wrapperClasses = new Class[] {
         Boolean.class,
         Character.class,
         Byte.class,

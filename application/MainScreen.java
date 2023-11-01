@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 import object_creator.ObjectCreator;
+import network.ReceivingScreen;
 import network.SendingScreen;
 
 public class MainScreen extends Screen {
@@ -62,11 +63,11 @@ public class MainScreen extends Screen {
                 case 1:
                     return new SendingScreen(this, objectCreator.getObjects());
                 case 2:
+                    return new ReceivingScreen(this);
                 case 3:
                     System.exit(0);
             }
         }
         return this;
     }
-    
 }

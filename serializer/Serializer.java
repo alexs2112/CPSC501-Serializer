@@ -2,6 +2,7 @@ package serializer;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -17,8 +18,14 @@ public class Serializer {
 
         objects = new ObjectMap();
         objects.populate(obj);
+
+        // Ensure that the given object is always the first one serialized
+        Element e = serializeObject(obj);
+        root.addContent(e);
+
         for (Integer i : objects.getObjects().keySet()) {
-            Element e = serializeObject(objects.get(i));
+            if (i == obj.hashCode()) { continue; }
+            e = serializeObject(objects.get(i));
             root.addContent(e);
         }
 
@@ -46,6 +53,7 @@ public class Serializer {
         Field[] fields = FieldHelper.findFields(obj.getClass());
         if (fields.length == 0) { return; }
         for(Field f : fields) {
+            if (Modifier.toString(f.getModifiers()).contains("static")) { continue; }
             Object value;
             try {
                 value = f.get(obj);

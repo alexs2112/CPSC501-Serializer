@@ -8,5 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     TestMap.class,
     TestSerializer.class,
+    TestNetwork.class,
+    TestDeserializer.class
 })
 public class TestAll { }

@@ -1,50 +1,41 @@
 package network;
 
-import java.util.ArrayList;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
-import asciiPanel.AsciiPanel;
+import java.awt.Color;
 import application.Screen;
-import serializer.Serializer;
-import object_creator.classes.ObjectType;
-import object_creator.helpers.ObjectSelectorSender;
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
+import asciiPanel.AsciiPanel;
 
-public class SendingScreen extends Screen {
+public class ReceivingScreen extends Screen {
     private Screen returnScreen;
     private int selection;
-    private ArrayList<ObjectType> objects;
-    private Sender sender;
-    private String errorString = null;
-    private Document doc;
+    private Receiver receiver;
+    private Object object;
     private String docName;
+    private String errorString = null;
     private String[] options = new String[] {
-        "Serialize Object",
-        "Send Object to Receiver",
+        "Receive Object",
+        "Object Inspector",
         "Back to Main Menu"
     };
 
-    public SendingScreen(Screen returnScreen, ArrayList<ObjectType> objects) {
+    public ReceivingScreen(Screen returnScreen) {
         this.returnScreen = returnScreen;
-        this.sender = new Sender();
-        this.objects = objects;
+        this.receiver = new Receiver();
     }
 
     @Override
-    public String title() { return "Serialization"; }
+    public String title() { return "Receiving"; }
 
     @Override
     public void print(AsciiPanel terminal) {
-        super.drawBorder(terminal);
+        drawBorder(terminal);
 
         int x = 4;
         int y = 3;
-        if (doc != null) {
-            terminal.write("Serialized Object: " + docName, x, y++, Color.WHITE);
+        if (object != null) {
+            terminal.write("Received Object: " + docName, x, y++, Color.WHITE);
         } else {
-            terminal.write("No serialized object", x, y++, Color.RED);
+            terminal.write("No received object", x, y++, Color.RED);
         }
 
         terminal.write("Hostname: localhost", x, y++);
@@ -74,12 +65,13 @@ public class SendingScreen extends Screen {
         } else if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             errorString = null;
             if (selection == 0) {
-                return new ObjectSelectorSender(this, objects);
+                receiver.start();
+                object = receiver.deserialize();
             } else if (selection == 1) {
-                if (doc == null) {
-                    errorString = "Cannot send an object without serializing it first.";
+                if (object == null) {
+                    errorString = "No objects to inspect.";
                 } else {
-                    sender.sendDocument(doc);
+                    // Return an object inspector here
                 }
                 return this;
             } else if (selection == 2) {
@@ -89,21 +81,12 @@ public class SendingScreen extends Screen {
         return this;
     }
 
-    public void serializeObject(ObjectType o) {
-        docName = o.name;
-        doc = new Serializer().serialize(o);
-
-        XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        String xmlString = xmlOutputter.outputString(doc);
-        System.out.println(xmlString);
-    }
-
     private void printMessages(AsciiPanel terminal, int x, int y) {
-        while (sender.messages.size() > 8) {
-            sender.messages.remove(1);
+        while (receiver.messages.size() > 8) {
+            receiver.messages.remove(1);
         }
-        for (int i = 0; i < sender.messages.size(); i++) {
-            String m = sender.messages.get(i);
+        for (int i = 0; i < receiver.messages.size(); i++) {
+            String m = receiver.messages.get(i);
             Color c = Color.LIGHT_GRAY;
             if (m.startsWith("Error")) { c = Color.RED; }
             else if (m.startsWith("Warning")) { c = Color.YELLOW; }

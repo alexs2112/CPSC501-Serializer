@@ -11,21 +11,26 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 import org.jdom2.output.Format;
+import deserializer.Deserializer;
 
 public class Receiver {
     private static final int port = 6666;
     private ServerSocket server;
+    private Document document;
+    public boolean print;
     public ArrayList<String> messages;
 
     public Receiver() {
         messages = new ArrayList<String>();
     }
 
-    public static void main(String[] args) {
-        new Receiver().start();
+    public Receiver(boolean printOutput) {
+        messages = new ArrayList<String>();
+        print = printOutput;
     }
 
     public void start() {
+        // Start the socket
         try {
             server = new ServerSocket(port);
         } catch(IOException e) {
@@ -44,12 +49,12 @@ public class Receiver {
             return;
         }
 
+        // Receive the serialized document
         BufferedReader in;
-        Document doc;
         try {
             in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
             SAXBuilder saxBuilder = new SAXBuilder();
-            doc = saxBuilder.build(in);
+            document = saxBuilder.build(in);
             messages.add("Document received!");
         } catch(IOException e) {
             System.out.println(e);
@@ -61,6 +66,7 @@ public class Receiver {
             return;
         }
 
+        // Close the sockets
         try {
             server.close();
             sender.close();
@@ -70,10 +76,15 @@ public class Receiver {
             messages.add("Warning: Failed to close sockets.");
         }
 
-        XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        String xmlString = xmlOutputter.outputString(doc);
-        System.out.println(xmlString);
+        if (print) {
+            XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+            String xmlString = xmlOutputter.outputString(document);
+            System.out.println(xmlString);
+        }
+    }
 
-        // Deserialize here
+    public Object deserialize() {
+        Object o = new Deserializer().deserialize(document);
+        return o;
     }
 }

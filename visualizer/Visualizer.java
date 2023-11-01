@@ -97,16 +97,16 @@ public abstract class Visualizer extends Screen {
     protected Screen getNextScreen(Object o) {
         if (o.getClass().getName().equals("java.lang.String")) { return new VisualizerNormal(o, this, homeScreen, breadcrumb); }
         else if (FieldHelper.isPrimitive(o)) { return this; }
-        else if (o.getClass().isArray()) { return this; /* Handle Array Here */ }
-        else if (o.getClass() == ArrayList.class) { return this; /* Handle ArrayList Here */ }
+        else if (o.getClass().isArray()) { return new VisualizerArray(o, this, homeScreen, breadcrumb); }
+        else if (o.getClass() == ArrayList.class) { return new VisualizerArray(o, this, homeScreen, breadcrumb); }
         else { return new VisualizerNormal(o, this, homeScreen, breadcrumb); }
     }
 
     public static Screen getVisualizer(Object o, Screen homeScreen) {
         if (o.getClass().getName().equals("java.lang.String")) { return new VisualizerNormal(o, homeScreen, homeScreen); }
         else if (FieldHelper.isPrimitive(o)) { return homeScreen; } // This should never happen
-        else if (o.getClass().isArray()) { return homeScreen; /* Handle Array Here */ }
-        else if (o.getClass() == ArrayList.class) { return homeScreen; /* Handle ArrayList Here */ }
+        else if (o.getClass().isArray()) { return new VisualizerArray(o, homeScreen, homeScreen); }
+        else if (o.getClass() == ArrayList.class) { return new VisualizerNormal(o, homeScreen, homeScreen); }
         else { return new VisualizerNormal(o, homeScreen, homeScreen); }
     }
 }

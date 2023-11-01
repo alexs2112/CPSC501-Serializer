@@ -4,13 +4,14 @@ import java.awt.event.KeyEvent;
 import java.awt.Color;
 import application.Screen;
 import asciiPanel.AsciiPanel;
+import visualizer.Visualizer;
 
 public class ReceivingScreen extends Screen {
     private Screen returnScreen;
     private int selection;
     private Receiver receiver;
     private Object object;
-    private String docName;
+    private String objString;
     private String errorString = null;
     private String[] options = new String[] {
         "Receive Object",
@@ -33,7 +34,7 @@ public class ReceivingScreen extends Screen {
         int x = 4;
         int y = 3;
         if (object != null) {
-            terminal.write("Received Object: " + docName, x, y++, Color.WHITE);
+            terminal.write("Received Object: " + objString, x, y++, Color.WHITE);
         } else {
             terminal.write("No received object", x, y++, Color.RED);
         }
@@ -67,11 +68,12 @@ public class ReceivingScreen extends Screen {
             if (selection == 0) {
                 receiver.start();
                 object = receiver.deserialize();
+                objString = object.getClass().getName();
             } else if (selection == 1) {
                 if (object == null) {
                     errorString = "No objects to inspect.";
                 } else {
-                    // Return an object inspector here
+                    return Visualizer.getVisualizer(object, this);
                 }
                 return this;
             } else if (selection == 2) {

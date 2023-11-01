@@ -7,4 +7,5 @@ javac ^
     serializer/*.java ^
     serializer/helpers/*.java ^
     network/*.java ^
+    visualizer/*.java ^
     unit_tests/*.java

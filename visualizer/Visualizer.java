@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import application.Screen;
 import asciiPanel.AsciiPanel;
-import serializer.helpers.FieldHelper;
+import helpers.FieldHelper;
 
 public abstract class Visualizer extends Screen {
     private Screen homeScreen;

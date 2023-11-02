@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import application.Screen;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import serializer.helpers.FieldHelper;
 import asciiPanel.AsciiPanel;
+import helpers.FieldHelper;
 
 public class VisualizerArray extends Visualizer {
     private ArrayList<Object> values;

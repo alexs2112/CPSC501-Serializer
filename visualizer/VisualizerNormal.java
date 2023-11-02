@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
 import asciiPanel.AsciiPanel;
+import helpers.FieldHelper;
 import application.Screen;
-import serializer.helpers.FieldHelper;
 
 public class VisualizerNormal extends Visualizer {
     private ArrayList<Field> fields;

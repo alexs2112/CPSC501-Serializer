@@ -1,10 +1,10 @@
 package serializer;
 
 import java.util.HashMap;
+import helpers.FieldHelper;
 import java.util.ArrayList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
-import serializer.helpers.FieldHelper;
 
 @SuppressWarnings("rawtypes")
 public class ObjectMap {

@@ -5,6 +5,7 @@ import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 import org.jdom2.Document;
 import java.util.ArrayList;
+import java.util.Stack;
 import serializer.Serializer;
 import deserializer.Deserializer;
 import object_creator.classes.*;
@@ -222,5 +223,16 @@ public class TestDeserializer {
         Object r = deserializer.deserialize(doc);
         assertEquals("java.lang.String", r.getClass().getName());
         assertEquals(s, (String)r);
+    }
+
+    @Test @SuppressWarnings("unchecked")
+    public void TestStack() {
+        Stack<Integer> s = new Stack<Integer>();
+        s.add(1);
+        s.add(2);
+        Document doc = serializer.serialize(s);
+        Stack<Integer> r = (Stack<Integer>)deserializer.deserialize(doc);
+        assertEquals(s.get(0).toString(), r.get(0));
+        assertEquals(s.get(1).toString(), r.get(1));
     }
 }

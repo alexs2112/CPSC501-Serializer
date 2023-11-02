@@ -5,7 +5,7 @@ javac ^
     object_creator/handlers/*.java ^
     object_creator/helpers/*.java ^
     serializer/*.java ^
-    serializer/helpers/*.java ^
+    helpers/*.java ^
     network/*.java ^
     visualizer/*.java ^
     unit_tests/*.java

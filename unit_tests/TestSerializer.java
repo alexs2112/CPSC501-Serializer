@@ -5,6 +5,8 @@ import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import java.util.ArrayList;
+import java.util.Vector;
+import java.util.List;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import serializer.Serializer;
@@ -66,7 +68,6 @@ public class TestSerializer {
         Element A = root.getChildren().get(0);
         assertEquals("java.util.ArrayList", A.getAttributeValue("class"));
         assertEquals(Integer.toString(o.hashCode()), A.getAttributeValue("id"));
-        assertEquals("2", A.getAttributeValue("size"));
     }
 
     @Test
@@ -234,6 +235,23 @@ public class TestSerializer {
                 c = e.getChildren().get(1);
                 assertEquals(Integer.toString(b.hashCode()), c.getTextNormalize());
             }
+        }
+    }
+
+    @Test
+    public void TestVector() {
+        Vector<Integer> v = new Vector<Integer>(3);
+        v.add(0);
+        v.add(1);
+        v.add(2);
+        Document d = serializer.serialize(v);
+
+        Element root = d.getRootElement();
+        Element vec = root.getChildren().get(0);
+        List<Element> children = vec.getChildren("value");
+        for (int i = 0; i < children.size(); i++) {
+            Element e = children.get(i);
+            assertEquals(Integer.toString(v.get(i)), e.getTextNormalize());
         }
     }
 }

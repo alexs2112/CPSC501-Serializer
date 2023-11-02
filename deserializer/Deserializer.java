@@ -5,10 +5,10 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import helpers.CollectionHelper;
 
 @SuppressWarnings("rawtypes")
 public class Deserializer {
@@ -22,10 +22,21 @@ public class Deserializer {
         for (Element e : document.getRootElement().getChildren()) {
             if (e.getAttribute("length") != null) {
                 deserializeArray(e);
-            } else if (e.getAttribute("size") != null) {
-                deserializeArrayList(e);
             } else {
-                deserializeNormalObject(e);
+                int id;
+                try {
+                    id = e.getAttribute("id").getIntValue();
+                } catch(DataConversionException err) {
+                    System.out.println(err);
+                    continue;
+                }
+                o = objects.get(id);
+
+                if (CollectionHelper.isCollection(objects.get(id).getClass())) {
+                    deserializeCollection(e, o);
+                } else {
+                    deserializeNormalObject(e, o);
+                }
             }
         }
 
@@ -65,15 +76,7 @@ public class Deserializer {
         }
     }
 
-    private void deserializeNormalObject(Element e) {
-        int id;
-        try {
-            id = e.getAttribute("id").getIntValue();
-        } catch(DataConversionException err) {
-            System.out.println(err);
-            return;
-        }
-
+    private void deserializeNormalObject(Element e, Object o) {
         for (Element field : e.getChildren("field")) {
             // Read name and class from attributes
             String fieldName = field.getAttributeValue("name");
@@ -102,7 +105,7 @@ public class Deserializer {
                 String text = field.getChildren("value").get(0).getText();
                 Object value = wrapObject(text, f.getType());
                 try {
-                    f.set(objects.get(id), value);
+                    f.set(o, value);
                 } catch(IllegalAccessException err) {
                     System.out.println(err);
                     continue;
@@ -111,7 +114,7 @@ public class Deserializer {
                 String value = field.getChildren("reference").get(0).getTextTrim();
                 try {
                     int objId = Integer.valueOf(value);
-                    f.set(objects.get(id), objects.get(objId));
+                    f.set(o, objects.get(objId));
                 } catch(NumberFormatException err) {
                     System.out.println(err);
                     continue;
@@ -164,27 +167,14 @@ public class Deserializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private void deserializeArrayList(Element e) {
-        int id;
-        int size;
-        ArrayList o;
-        try {
-            id = e.getAttribute("id").getIntValue();
-            size = e.getAttribute("size").getIntValue();
-            o = (ArrayList)objects.get(id);
-        } catch(DataConversionException err) {
-            System.out.println(err);
-            return;
-        }
-
+    private void deserializeCollection(Element e, Object o) {
         if (e.getChildren("value").size() > 0) {
             List<Element> children = e.getChildren("value");
-            for (int i = 0; i < size; i++) {
-                String text = children.get(i).getText();
-                Object value = wrapObject(text, objects.get(id).getClass().getComponentType());
+            for (Element child : children) {
+                String text = child.getText();
+                Object value = wrapObject(text, o.getClass());
                 try {
-                    o.add(value);
+                    CollectionHelper.add(o, value);
                 } catch(IllegalArgumentException err) {
                     System.out.println(err);
                     continue;
@@ -192,11 +182,11 @@ public class Deserializer {
             }
         } else if (e.getChildren("reference").size() > 0) {
             List<Element> children = e.getChildren("reference");
-            for (int i = 0; i < size; i++) {
-                String text = children.get(i).getTextTrim();
+            for (Element child : children) {
+                String text = child.getTextTrim();
                 try {
                     int objId = Integer.valueOf(text);
-                    o.add(objects.get(objId));
+                    CollectionHelper.add(o, objects.get(objId));
                 } catch(NumberFormatException err) {
                     System.out.println(err);
                     continue;
@@ -209,8 +199,12 @@ public class Deserializer {
     }
 
     private Object wrapObject(String value, Class c) {
+        if (c == null) { System.out.println(value); }
         if (c.getName().equals("boolean")) { return Boolean.valueOf(value); }
-        else if (c.getName().equals("char")) { return value.toCharArray()[0]; }
+        else if (c.getName().equals("char")) { 
+            if (value.toCharArray().length == 0) { return ' '; }
+            return value.toCharArray()[0];
+        }
         else if (c.getName().equals("byte")) { return Byte.valueOf(value); }
         else if (c.getName().equals("short")) { return Short.valueOf(value); }
         else if (c.getName().equals("int")) { return Integer.valueOf(value); }

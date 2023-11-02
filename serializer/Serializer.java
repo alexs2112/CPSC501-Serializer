@@ -3,10 +3,11 @@ package serializer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.Iterator;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import serializer.helpers.FieldHelper;
+import helpers.FieldHelper;
+import helpers.CollectionHelper;
 
 @SuppressWarnings("rawtypes")
 public class Serializer {
@@ -39,9 +40,8 @@ public class Serializer {
         if (obj.getClass().isArray()) {
             e.setAttribute("length", Integer.toString(Array.getLength(obj)));
             serializeArray(obj, e);
-        } else if (obj.getClass() == ArrayList.class) {
-            e.setAttribute("size", Integer.toString(((ArrayList)obj).size()));
-            serializeArrayList(obj, e);
+        } else if (CollectionHelper.isCollection(obj.getClass())) {
+            serializeCollection(obj, e);
         } else {
             serializeNormalObject(obj, e);
         }
@@ -87,10 +87,10 @@ public class Serializer {
         }
     }
 
-    private void serializeArrayList(Object obj, Element element) {
-        ArrayList list = (ArrayList)obj;
-        for (int i = 0; i < list.size(); i++) {
-            Object o = list.get(i);
+    private void serializeCollection(Object obj, Element element) {
+        Iterator<Object> iterator = CollectionHelper.getIterator(obj);
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
             Element value = serializeValue(o);
             element.addContent(value);
         }

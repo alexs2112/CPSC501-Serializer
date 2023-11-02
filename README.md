@@ -15,3 +15,10 @@ This project uses the `AsciiPanel` library for user input in a text-based interf
  - `Primitive Array`: Contains an array of arbitrary length of primitives
  - `Reference Array`: Contains an array of arbitrary length of other objects that have been created by the user
  - `ArrayList`: Contains a `java.util.ArrayList` that refers to other objects created by the user
+
+### Usage
+ - Open two separate instances of the program through the command line (`java application.Main`)
+ - With one instance, create one or more objects through the `Object Creator` terminal
+ - The other instance will open the `Receive Object` terminal and enter `Receive Object` mode
+ - The first instance can then open the `Serialize` terminal, serialize the object that they wish to use and send it to the receiving instance.
+ - Once the receiving instance gets the object it will automatically deserialize it. The deserialized object can then be viewed in the `Object Inspector`
